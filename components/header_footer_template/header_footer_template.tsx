@@ -32,6 +32,7 @@ export default class NotLoggedIn extends React.PureComponent<Props> {
             rootElement.classList.add('container-fluid');
         }
     }
+
     componentWillUnmount() {
         document.body.classList.remove('sticky');
         const rootElement: HTMLElement | null = document.getElementById('root');
@@ -113,30 +114,30 @@ export default class NotLoggedIn extends React.PureComponent<Props> {
                     {this.props.children}
                 </div>
                 <div className='row footer'>
-                    <div
-                        id='footer_section'
-                        className='footer-pane col-xs-12'
-                    >
-                        <div className='col-xs-12'>
-                            <span
-                                id='company_name'
-                                className='pull-right footer-site-name'
-                            >
-                                {'Mattermost'}
-                            </span>
-                        </div>
-                        <div className='col-xs-12'>
-                            <span
-                                id='copyright'
-                                className='pull-right footer-link copyright'
-                            >
-                                {`© 2015-${new Date().getFullYear()} Mattermost, Inc.`}
-                            </span>
-                            <span className='pull-right'>
-                                {content}
-                            </span>
-                        </div>
-                    </div>
+                    {/*<div*/}
+                    {/*    id='footer_section'*/}
+                    {/*    className='footer-pane col-xs-12'*/}
+                    {/*>*/}
+                    {/*    <div className='col-xs-12'>*/}
+                    {/*        <span*/}
+                    {/*            id='company_name'*/}
+                    {/*            className='pull-right footer-site-name'*/}
+                    {/*        >*/}
+                    {/*            {'Mattermost'}*/}
+                    {/*        </span>*/}
+                    {/*    </div>*/}
+                    {/*    <div className='col-xs-12'>*/}
+                    {/*        <span*/}
+                    {/*            id='copyright'*/}
+                    {/*            className='pull-right footer-link copyright'*/}
+                    {/*        >*/}
+                    {/*            {`© 2015-${new Date().getFullYear()} Mattermost, Inc.`}*/}
+                    {/*        </span>*/}
+                    {/*        <span className='pull-right'>*/}
+                    {/*            {content}*/}
+                    {/*        </span>*/}
+                    {/*    </div>*/}
+                    {/*</div>*/}
                 </div>
             </div>
         );

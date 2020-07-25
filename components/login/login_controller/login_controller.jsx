@@ -60,9 +60,10 @@ class LoginController extends React.PureComponent {
         initializing: PropTypes.bool,
         actions: PropTypes.shape({
             login: PropTypes.func.isRequired,
+            loginByOAuthCode: PropTypes.func.isRequired,
             addUserToTeamFromInvite: PropTypes.func.isRequired,
         }).isRequired,
-    }
+    };
 
     constructor(props) {
         super(props);
@@ -149,7 +150,7 @@ class LoginController extends React.PureComponent {
         } else {
             document.title = this.props.siteName;
         }
-    }
+    };
 
     showSessionExpiredNotificationIfNeeded = () => {
         if (this.state.sessionExpired && !this.closeSessionExpiredNotification) {
@@ -177,7 +178,7 @@ class LoginController extends React.PureComponent {
             this.closeSessionExpiredNotification();
             this.closeSessionExpiredNotification = null;
         }
-    }
+    };
 
     preSubmit = (e) => {
         e.preventDefault();
@@ -259,7 +260,7 @@ class LoginController extends React.PureComponent {
         }
 
         this.submit(loginId, password, '');
-    }
+    };
 
     submit = (loginId, password, token) => {
         this.setState({serverError: null, loading: true});
@@ -317,7 +318,7 @@ class LoginController extends React.PureComponent {
                 this.finishSignin();
             }
         });
-    }
+    };
 
     finishSignin = (team) => {
         const experimentalPrimaryTeam = this.props.experimentalPrimaryTeam;
@@ -338,23 +339,23 @@ class LoginController extends React.PureComponent {
         } else {
             GlobalActions.redirectUserToDefaultTeam();
         }
-    }
+    };
 
     handleLoginIdChange = (e) => {
         this.setState({
             loginId: e.target.value,
         });
-    }
+    };
 
     handlePasswordChange = (e) => {
         this.setState({
             password: e.target.value,
         });
-    }
+    };
 
     handleBrandImageError = () => {
         this.setState({brandImageError: true});
-    }
+    };
 
     createCustomLogin = () => {
         if (this.props.enableCustomBrand) {
@@ -374,8 +375,10 @@ class LoginController extends React.PureComponent {
                         <Markdown
                             message={text}
                             options={
-                                {mentions: false,
-                                    imagesMetadata: null}
+                                {
+                                    mentions: false,
+                                    imagesMetadata: null,
+                                }
                             }
                         />
                     </div>
@@ -384,7 +387,7 @@ class LoginController extends React.PureComponent {
         }
 
         return null;
-    }
+    };
 
     createLoginPlaceholder = () => {
         const ldapEnabled = this.state.ldapEnabled;
@@ -417,7 +420,7 @@ class LoginController extends React.PureComponent {
         }
 
         return '';
-    }
+    };
 
     checkSignUpEnabled = () => {
         return this.props.enableSignUpWithEmail ||
@@ -426,12 +429,12 @@ class LoginController extends React.PureComponent {
             this.props.enableSignUpWithGoogle ||
             this.props.enableLdap ||
             this.props.enableSaml;
-    }
+    };
 
     onDismissSessionExpired = () => {
         LocalStorageStore.setWasLoggedIn(false);
         this.setState({sessionExpired: false});
-    }
+    };
 
     createExtraText = () => {
         const extraParam = (new URLSearchParams(this.props.location.search)).get('extra');
@@ -528,7 +531,7 @@ class LoginController extends React.PureComponent {
         }
 
         return null;
-    }
+    };
 
     createLoginOptions = () => {
         const loginControls = [];
@@ -753,6 +756,15 @@ class LoginController extends React.PureComponent {
             );
         }
 
+        loginControls.push(
+            <a
+                key='foxconn'
+                href={'https://oauth.foxconnedu.com/authorize?appId=team'}
+            >
+                {'Login With Foxconn OAuth'}
+            </a>,
+        );
+
         if (loginControls.length === 0) {
             loginControls.push(
                 <FormError
@@ -774,13 +786,34 @@ class LoginController extends React.PureComponent {
                 {loginControls}
             </div>
         );
-    }
+    };
 
     hideMfa = () => {
         this.setState({showMfa: false});
-    }
+    };
 
     render() {
+        const query = new URLSearchParams(this.props.location.search);
+        const code = query.get('code');
+        // eslint-disable-next-line no-console
+        console.log('code', code);
+        // eslint-disable-next-line no-console
+        console.log('loginByOAuthCode', this.props.actions.loginByOAuthCode);
+        if (code) {
+            this.props.actions.loginByOAuthCode(code).then(async ({error}) => {
+                if (error) {
+                    // eslint-disable-next-line no-console
+                    console.log('error', error);
+                }
+                this.finishSignin();
+            });
+            return (
+                <div>
+                    <h1>{'OAuth Login...'}</h1>
+                </div>
+            );
+        }
+
         const {
             customDescriptionText,
             siteName,

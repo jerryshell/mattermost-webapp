@@ -9,6 +9,10 @@ export function login(loginId, password, mfaToken) {
     };
 }
 
+export function loginByOAuthCode(code) {
+    return UserActions.loginByOAuthCode(code);
+}
+
 export function loginById(userId, password, mfaToken) {
     return (dispatch) => {
         return ignoreMfaRequiredError(dispatch(UserActions.loginById(userId, password, mfaToken)));
